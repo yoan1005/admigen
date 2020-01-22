@@ -1,0 +1,23 @@
+{
+    "name": "yoan1005/admigen",
+    "description": "Admin simple et universelle",
+    "authors": [
+        {
+            "name": "Yoan Fournier",
+            "email": "fournier.yoan10@gmail.com"
+        }
+    ],
+    "require": {},
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Yoan1005\\Admigen\\AdmigenServiceProvider"
+            ]
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Yoan1005\\Admigen\\": "src/"
+        }
+    }
+}
