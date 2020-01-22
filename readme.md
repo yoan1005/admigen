@@ -21,11 +21,6 @@ $ composer require yoan1005/admigen
 
 Please see the [changelog](changelog.md) for more information on what has changed recently.
 
-## Testing
-
-``` bash
-$ composer test
-```
 
 ## Contributing
 
@@ -37,7 +32,7 @@ If you discover any security related issues, please email yo instead of using th
 
 ## Credits
 
-- [yo][link-author]
+- [Yoan Fournier][link-author]
 - [All Contributors][link-contributors]
 
 ## License
@@ -53,5 +48,5 @@ license. Please see the [license file](license.md) for more information.
 [link-downloads]: https://packagist.org/packages/yoan1005/admigen
 [link-travis]: https://travis-ci.org/yoan1005/admigen
 [link-styleci]: https://styleci.io/repos/12345678
-[link-author]: https://github.com/yoanfournier
+[link-author]: https://github.com/yoan1005
 [link-contributors]: ../../contributors
