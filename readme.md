@@ -1,11 +1,6 @@
-# test
+# Admigen
 
-[![Latest Version on Packagist][ico-version]][link-packagist]
-[![Total Downloads][ico-downloads]][link-downloads]
-[![Build Status][ico-travis]][link-travis]
-[![StyleCI][ico-styleci]][link-styleci]
-
-This is where your description should go. Take a look at [contributing.md](contributing.md) to see a to do list.
+Une interface simple et flexible de gestion CRUD des modèles pour Laravel.
 
 ## Installation
 
@@ -16,6 +11,29 @@ $ composer require yoan1005/admigen
 ```
 
 ## Usage
+
+Download via composer the package
+
+Si Laravel > 5.5, le package sera automatiquement chargé par l'auto-discover
+Sinon ajouter le serviceProvider dans le config/app.php
+
+``` bash
+  Yoan1005\\Admigen\\AdmigenServiceProvider::class
+```
+
+Ajouter une colonne (int/bool) 'admin' dans la table "users", et set à 1 les admins
+
+La gestion des modèles se fait via un fichier de config
+
+Pour transférer les configs/assets/etc… du package, utiliser la commande publish:
+``` bash
+php artisan vendor:publish --provider="Yoan1005\Admigen\AdmigenServiceProvider"
+```
+
+## Todo
+
+* Migration pour update la table users
+* Passer la gestion des modèles en BDD
 
 ## Change log
 
@@ -33,7 +51,6 @@ If you discover any security related issues, please email yo instead of using th
 ## Credits
 
 - [Yoan Fournier][link-author]
-- [All Contributors][link-contributors]
 
 ## License
 
