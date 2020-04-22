@@ -30,6 +30,7 @@ Route::get('login', function () {
     Route::post('image/save', 'AdminController@saveImg');
     Route::post('file/save', 'AdminController@saveFile');
     Route::post('ordre/save', 'AdminController@reordonner')->name('admin.ordre');
+    Route::post('state/save', 'AdminController@changeState')->name('admin.state');
 
 
   });

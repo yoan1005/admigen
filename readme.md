@@ -10,6 +10,24 @@ Via Composer
 $ composer require yoan1005/admigen
 ```
 
+OR LOCALLY
+
+## composer.json
+
+"autoload": {
+    "classmap": [
+        "database/seeds",
+        "database/factories",
+      ==>  "packages"
+    ],
+    "psr-4": {
+        "App\\": "app/",
+      ==>  "Yoan1005\\Admigen\\": "packages/Yoan1005/Admigen/src"
+    }
+},
+
+composer dump-autoload
+
 ## Usage
 
 Download via composer the package

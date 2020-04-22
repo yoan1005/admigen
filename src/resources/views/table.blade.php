@@ -16,7 +16,9 @@
                             </div>
                             <div class="content table-responsive table-full-width">
                                 @include('admigen::partials.table')
-                                {{$datas->links()}}
+                                @if ($datas instanceof \Illuminate\Pagination\LengthAwarePaginator)
+                                  {{$datas->links()}}
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -29,17 +31,27 @@
 @endsection
 
 @section('scripts')
-    <script>
-        function changeState(id) {
-            $.get("projets/state/"+id, function (response) {
-                if (response.status == 200) {
-                    window.location.reload();
-                }
-            })
-        }
-    </script>
+  <script>
+      function changeState(id, model, el) {
+        $.post('{{ route('admin.state') }}', {
+          "_token": "{{csrf_token()}}",
+          model: model,
+          id: id
+        }).done(function(data) {
+          if (data.moderate == true) {
+            $(el).removeClass('pe-7s-check pe-7s-close-circle').addClass('pe-7s-check').css('color', 'green')
+          } else {
+            $(el).removeClass('pe-7s-check pe-7s-close-circle').addClass('pe-7s-close-circle').css('color', 'red')
+
+
+          }
+          console.log('success', data);
+        })
+      }
+  </script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script type="text/javascript">
+<?php if (isset($can) && $can['order']): ?>
 // reordonner Catégories
 var photos_array = [];
 var model = "";
@@ -60,5 +72,6 @@ $( "table tbody" ).sortable( {
     })
   }
 }).disableSelection();
+<?php endif ?>
 </script>
 @endsection

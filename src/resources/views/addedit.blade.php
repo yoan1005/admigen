@@ -10,6 +10,7 @@
 					<div class="header">
 						<h4 class="title">{{class_basename($instance)}}</h4>
 					</div>
+					@php $trans = config('admigen.transKey'); @endphp
 
 					<div class="content">
 						<form method="post" enctype="multipart/form-data">
@@ -20,9 +21,32 @@
                 @foreach ($instance->getFillable() as $key)
                   <div class="col-md-6">
                     <div class="form-group">
-                      <label>{{$key}}</label>
-                      <input type="text" class="form-control" placeholder="" value="{{ isset($instance->$key)? $instance->$key : '' }}" name="{{$key}}">
-                    </div>
+											@if (str_contains($key, '_id'))
+												@php
+													$models = explode('_id', $key);
+													$model = "\App\\" . ucfirst($models[0]);
+
+													$arr_key_join = ['title', 'name', 'nom', 'label'];
+												@endphp
+												@if (class_exists($model))
+													<label>{{(isset($trans[$key])) ? $trans[$key] : $key}}</label>
+													<select class="form-control" name="{{$key}}">
+														@foreach ($model::all() as $model)
+																<option {{($model->id == $instance->{$key}) ? 'selected' : ''}} value="{{$model->id}}">
+										              @foreach ($arr_key_join as $k)
+											               @if (isset($model->$k))
+																			{{$model->$k}}
+																		@endif
+																	@endforeach
+																</option>
+														@endforeach
+													</select>
+												@endif
+											@else
+	                      <label>{{(isset($trans[$key])) ? $trans[$key] : $key}}</label>
+	                      <input type="text" class="form-control" placeholder="" value="{{ isset($instance->$key)? $instance->$key : '' }}" name="{{$key}}">
+											@endif
+										</div>
                   </div>
                 @endforeach
               </div>

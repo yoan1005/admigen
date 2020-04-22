@@ -46,17 +46,28 @@ class AdminController extends Controller
             $datas = $datas->where($condition['field'], $condition['operator'], $condition['value']);
           }
         }
-        $datas = $datas->paginate(20);
+        if ($conditions = config('admigen.orderby.'.ucfirst($model).'')) {
+          foreach ($conditions as $condition) {
+            $datas = $datas->orderby($condition['field'], $condition['value']);
+          }
+        }
+
+        if (!in_array(ucfirst($model), config('admigen.cant.paginate'))) {
+          $datas = $datas->paginate(20);
+        } else {
+          $datas = $datas->get();
+        }
 
         $trad = config('admigen.trads.'.ucfirst($model).'');
         $fields = config('admigen.fields.'.ucfirst($model).'');
 
          $can = [
-        'show' => false,
-        'add' => true,
-        'edit' => true,
-        'delete' => true,
-        ];
+          'show' => !in_array(ucfirst($model), config('admigen.cant.show')),
+          'add' => !in_array(ucfirst($model), config('admigen.cant.add')),
+          'edit' => !in_array(ucfirst($model), config('admigen.cant.edit')),
+          'order' => !in_array(ucfirst($model), config('admigen.cant.order')),
+          'delete' => !in_array(ucfirst($model), config('admigen.cant.delete')),
+          ];
 
         $canAddName = config('admigen.models')[ucfirst($model)];
 
@@ -72,8 +83,8 @@ class AdminController extends Controller
         $modelI = '\App\\'.ucfirst($model) ;
 
       $instance = new $modelI;
-      if (view()->exists('backend.addedit.edit-'.$model.'')) {
-        return view('backend.addedit.edit-'.$model.'', compact('instance'));
+      if (view()->exists('backend.'.$model.'.edit')) {
+        return view('backend.'.$model.'.edit', compact('instance'));
       } else {
         return view('admigen::addedit', compact('instance'));
       }
@@ -88,8 +99,8 @@ class AdminController extends Controller
         $modelI = '\App\\'.ucfirst($model) ;
 
         $instance = $modelI::find($id);
-        if (view()->exists('backend.addedit.edit-'.$model.'')) {
-          return view('backend.addedit.edit-'.$model.'', compact('instance'));
+        if (view()->exists('backend.'.$model.'.edit')) {
+          return view('backend.'.$model.'.edit', compact('instance'));
         } else {
           return view('admigen::addedit', compact('instance'));
         }
@@ -108,6 +119,7 @@ class AdminController extends Controller
         $client->fill($request->all());
         $client->save();
 
+        return back();
         return redirect(route('admin.show', $model));
      }
 
@@ -124,6 +136,7 @@ class AdminController extends Controller
         $client->fill($request->all());
         $client->save();
 
+        return back();
         return redirect(route('admin.show', $model));
      }
 
@@ -205,6 +218,18 @@ class AdminController extends Controller
 
       return response()->json(['success' => true]);
     }
+
+    public function changeState(Request $request) {
+        $model_r = ucfirst($request->model);
+        $model = 'App\\'.$model_r ;
+        $chat = $model::whereId($request->id)->first();
+        $chat->moderate = !$chat->moderate;
+        $chat->save();
+
+
+        return response()->json(['success' => true, 'moderate' => $chat->moderate]);
+      }
+
 
 
 }

@@ -60,7 +60,7 @@ class AdmigenServiceProvider extends ServiceProvider
     ], 'admigen.config');
 
     $this->publishes([
-      __DIR__.'/resources/views' => base_path('resources/views/vendor/yoan1005'),
+      __DIR__.'/resources/views' => base_path('resources/views/vendor/admigen'),
     ], 'admigen.views');
 
     $this->publishes([

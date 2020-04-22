@@ -12,21 +12,21 @@
 
 
     <!-- Bootstrap core CSS     -->
-    <link href="/vendor/admigen/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="{{url('/vendor/admigen/css/bootstrap.min.css')}}" rel="stylesheet" />
     <!-- Animation library for notifications   -->
-    <link href="/vendor/admigen/css/animate.min.css" rel="stylesheet"/>
+    <link href="{{url('/vendor/admigen/css/animate.min.css')}}" rel="stylesheet"/>
     <!--  Light Bootstrap Table core CSS    -->
-    <link href="/vendor/admigen/css/light-bootstrap-dashboard.css" rel="stylesheet"/>
+    <link href="{{url('/vendor/admigen/css/light-bootstrap-dashboard.css')}}" rel="stylesheet"/>
     <!--  CSS for Demo Purpose, don't include it in your project     -->
-    <link href="/vendor/admigen/css/demo.css" rel="stylesheet" />
+    <link href="{{url('/vendor/admigen/css/demo.css')}}" rel="stylesheet" />
 
     <!--     Fonts and icons     -->
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
     <link href='http://fonts.googleapis.com/css?family=Roboto:400,700,300' rel='stylesheet' type='text/css'>
-    <link href="/vendor/admigen/css/pe-icon-7-stroke.css" rel="stylesheet" />
+    <link href="{{url('/vendor/admigen/css/pe-icon-7-stroke.css')}}" rel="stylesheet" />
     @yield('styles')
-		<script src="/vendor/admigen/js/jquery-3.2.1.min.js" type="text/javascript"></script>
-		<script src="/vendor/admigen/js/bootstrap.min.js" type="text/javascript"></script>
+		<script src="{{url('/vendor/admigen/js/jquery-3.2.1.min.js')}}" type="text/javascript"></script>
+		<script src="{{url('/vendor/admigen/js/bootstrap.min.js')}}" type="text/javascript"></script>
 
 
 </head>
@@ -53,12 +53,12 @@
                     </a>
                 </li> -->
 								@foreach (config('admigen.models') as $model => $name)
-									  <li class="w-100 ">
-											<a href="{{ route('admin.show', mb_strtolower($model)) }}" class=" p-2" >
-													<i class="pe-7s-server"></i>
-													<p>{{$name}}</p>
-											</a>
-									</li>
+										<li class="w-100 ">
+											 <a href="{{ route('admin.show', mb_strtolower($model)) }}" class=" p-2" >
+													 <i class="{{(config('admigen.icons.'.ucfirst($model).'')) ? config('admigen.icons.'.ucfirst($model).'') : 'pe-7s-server'}}"></i>
+													 <p>{{$name}}</p>
+											 </a>
+									 </li>
 								@endforeach
 
             </ul>
@@ -108,7 +108,7 @@
     <!--   Core JS Files   -->
 
     <!-- Light Bootstrap Table Core javascript and methods for Demo purpose -->
-	<script src="/vendor/admigen/js/light-bootstrap-dashboard.js"></script>
+	<script src="{{url('/vendor/admigen/js/light-bootstrap-dashboard.js')}}"></script>
 	@yield('scripts')
 
 </html>

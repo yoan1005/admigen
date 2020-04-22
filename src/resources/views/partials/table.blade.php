@@ -35,8 +35,8 @@
         <i class="pe-7s-global"></i>
         @endif
     </td>
-  @elseif ($k == 'picture' || $k == 'visuel')
-    <td><img src="{{ url($value) }}" alt="" height="50" style="max-width: 100px;"></td>
+  @elseif ($k == 'picture' || $k == 'visuel' || $k == 'logo' || $k == 'photo')
+   <td><img src="{{ url($value) }}" alt="" height="50" ></td>
 
     @elseif ($k == 'color')
     <td><span style="height: 20px; width: 60px; background: {{ $value }}; display: inline-block;"></span></td>
@@ -49,14 +49,14 @@
         <i class="pe-7s-close-circle"></i>
         @endif
     </td>
-     @elseif ($k == 'moderate')
-     <td>
-       @if($value == 1)
-        <i onclick="changeState({{$data['id']}})" class="pe-7s-check" style="font-size: 1.5em;color: green"></i>
-        @else
-        <i onclick="changeState({{$data['id']}})" class="pe-7s-close-circle" style="font-size: 1.5em;color: red"></i>
-        @endif
-    </td>
+    @elseif ($k == 'moderate')
+    <td>
+      @if($value == 1)
+       <i onclick="changeState({{$data['id']}}, '{{strtolower(class_basename($datas->first()))}}', this)" class="pe-7s-check" style="font-size: 1.5em;color: green"></i>
+       @else
+       <i onclick="changeState({{$data['id']}}, '{{strtolower(class_basename($datas->first()))}}', this)" class="pe-7s-close-circle" style="font-size: 1.5em;color: red"></i>
+       @endif
+   </td>
     @else
     <td>{{ str_limit($value, 50) }}</td>
     @endif

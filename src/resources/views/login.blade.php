@@ -8,8 +8,8 @@
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 
       <!-- Bootstrap core CSS     -->
-      <link href="/vendor/admigen/css/bootstrap.min.css" rel="stylesheet" />
-      <link href="/vendor/admigen/css/adminlte.css" rel="stylesheet" />
+      <link href="{{url('/vendor/admigen/css/bootstrap.min.css')}}" rel="stylesheet" />
+      <link href="{{url('/vendor/admigen/css/adminlte.css')}}" rel="stylesheet" />
 
       <!--     Fonts and icons     -->
       <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
@@ -29,7 +29,7 @@
 <div class="login-box" >
   <div class="login-logo">
 	  {{-- <img src="../vendor/admigen/img/logo_ww.svg" height="50" alt="" ><br> --}}
-   <a href="../vendor/admigen/admin/index2.html">Admin <b>Admigen</b> </a>
+   <a href="">Admin <b>Admigen</b> </a>
   </div>
   <!-- /.login-logo -->
   <div class="login-box-body">
@@ -63,9 +63,9 @@
 </div>
 <!-- /.login-box -->
 
-<script src="/vendor/admigen/js/jquery-3.2.1.min.js" type="text/javascript"></script>
+<script src="{{url('/vendor/admigen/js/jquery-3.2.1.min.js')}}" type="text/javascript"></script>
 
-<script src="/vendor/admigen/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="{{url('/vendor/admigen/js/bootstrap.min.js')}}" type="text/javascript"></script>
 
 </body>
 </html>
