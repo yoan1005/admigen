@@ -10,9 +10,9 @@ Via Composer
 $ composer require yoan1005/admigen
 ```
 
-OR LOCALLY
+## LOCALLY
 
-## composer.json
+In your composer.json
 ``` bash
 "autoload": {
     "classmap": [
