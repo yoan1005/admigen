@@ -37,7 +37,7 @@ Si Laravel > 5.5, le package sera automatiquement chargé par l'auto-discover
 Sinon ajouter le serviceProvider dans le config/app.php
 
 ``` bash
-  Yoan1005\\Admigen\\AdmigenServiceProvider::class
+  Yoan1005\Admigen\AdmigenServiceProvider::class
 ```
 
 Ajouter une colonne (int/bool) 'admin' dans la table "users", et set à 1 les admins
