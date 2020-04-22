@@ -2,7 +2,7 @@
 
 Une interface simple et flexible de gestion CRUD des modèles pour Laravel.
 
-## Installation
+## Installation automatically (not working)
 
 Via Composer
 
@@ -10,7 +10,7 @@ Via Composer
 $ composer require yoan1005/admigen
 ```
 
-## LOCALLY
+## Installation manually (use it)
 
 In your composer.json
 ``` bash
