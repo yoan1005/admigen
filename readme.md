@@ -13,7 +13,7 @@ $ composer require yoan1005/admigen
 OR LOCALLY
 
 ## composer.json
-
+``` bash
 "autoload": {
     "classmap": [
         "database/seeds",
@@ -25,9 +25,10 @@ OR LOCALLY
       ==>  "Yoan1005\\Admigen\\": "packages/Yoan1005/Admigen/src"
     }
 },
-
+```
+``` bash
 composer dump-autoload
-
+```
 ## Usage
 
 Download via composer the package
