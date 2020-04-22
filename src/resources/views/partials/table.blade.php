@@ -49,12 +49,12 @@
         <i class="pe-7s-close-circle"></i>
         @endif
     </td>
-    @elseif ($k == 'moderate')
+  @elseif ($k == 'moderate' || $k == 'active' || $k == 'visible')
     <td>
       @if($value == 1)
-       <i onclick="changeState({{$data['id']}}, '{{strtolower(class_basename($datas->first()))}}', this)" class="pe-7s-check" style="font-size: 1.5em;color: green"></i>
+       <i onclick="changeState({{$data['id']}}, '{{strtolower(class_basename($datas->first()))}}', this, '{{$k}}')" class="pe-7s-check" style="font-size: 1.5em;color: green"></i>
        @else
-       <i onclick="changeState({{$data['id']}}, '{{strtolower(class_basename($datas->first()))}}', this)" class="pe-7s-close-circle" style="font-size: 1.5em;color: red"></i>
+       <i onclick="changeState({{$data['id']}}, '{{strtolower(class_basename($datas->first()))}}', this, '{{$k}}')" class="pe-7s-close-circle" style="font-size: 1.5em;color: red"></i>
        @endif
    </td>
     @else

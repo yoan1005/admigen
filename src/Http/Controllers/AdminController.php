@@ -223,11 +223,10 @@ class AdminController extends Controller
         $model_r = ucfirst($request->model);
         $model = 'App\\'.$model_r ;
         $chat = $model::whereId($request->id)->first();
-        $chat->moderate = !$chat->moderate;
+        $chat->{$request->field} = !$chat->{$request->field};
         $chat->save();
 
-
-        return response()->json(['success' => true, 'moderate' => $chat->moderate]);
+        return response()->json(['success' => true, 'moderate' => $chat->{$request->field}]);
       }
 
 

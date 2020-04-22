@@ -32,10 +32,11 @@
 
 @section('scripts')
   <script>
-      function changeState(id, model, el) {
+      function changeState(id, model, el, field) {
         $.post('{{ route('admin.state') }}', {
           "_token": "{{csrf_token()}}",
           model: model,
+          field: field,
           id: id
         }).done(function(data) {
           if (data.moderate == true) {
