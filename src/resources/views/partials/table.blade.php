@@ -1,22 +1,28 @@
-<table class="table table-hover table-striped">
+
+<div class="col-12">
+
+<table id="dataTables" class="table table-hover table-striped">
 <?php if (count($datas) > 0): ?>
 
     <thead>
         <tr>
          @php $headers = collect($datas->first()->toArray())->only($fields) @endphp
          @foreach($headers as $key => $v)
-         @if (array_key_exists($key, $trad))
-         <th>{{$trad[$key]}}</th>
-         @endif
+           @if (array_key_exists($key, $trad))
+             <th>{{$trad[$key]}}</th>
+           @endif
          @endforeach
+
          <th>Actions</th>
      </tr>
  </thead>
  <tbody>
+
     @foreach($datas as $data)
     <tr class="line" id="{{$data->id}}" data-model="{{class_basename($data)}}">
      @if (isset($data))
-     @php $data = collect($data->toArray())->only($fields) @endphp
+     @php $data = collect($data->toArray())->only(array_merge($fields, ['textes'])); @endphp
+
      @foreach($data as $k => $value)
      @if($k != "user_id")
      @if (isset($value))
@@ -57,12 +63,30 @@
        <i onclick="changeState({{$data['id']}}, '{{strtolower(class_basename($datas->first()))}}', this, '{{$k}}')" class="pe-7s-close-circle" style="font-size: 1.5em;color: red"></i>
        @endif
    </td>
-    @else
-    <td>{{ str_limit($value, 50) }}</td>
-    @endif
-    @else
-    <td>&nbsp;</td>
-    @endif
+   @elseif (str_contains($k, '_id'))
+      @php
+        $models = explode('_id', $k);
+        $model = "\App\\" . ucfirst($models[0]);
+        $arr_key_join = ['title', 'name', 'nom', 'label'];
+      @endphp
+      @if (class_exists($model))
+          @foreach ($model::all() as $model)
+            @if ($model->id == $data[$k])
+              @foreach ($arr_key_join as $keyyy)
+                @if (isset($model->$keyyy))
+                  <td>{{$model->$keyyy}}</td>
+                @endif
+              @endforeach
+            @endif
+          @endforeach
+      @endif
+
+      @else
+        <td>{{ str_limit($value, 50) }}</td>
+      @endif
+      @else
+        <td>&nbsp;</td>
+      @endif
     @endif
     @endforeach
     @endif
@@ -90,3 +114,4 @@
 <?php endif ?>
 
 </table>
+</div>
