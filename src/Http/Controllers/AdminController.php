@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Response;
 use App\Http\Controllers\Controller;
+use Yoan1005\Admigen\AdPhoto as Photo;
 
 class AdminController extends Controller
 {
@@ -71,7 +72,11 @@ class AdminController extends Controller
 
         $canAddName = config('admigen.models')[ucfirst($model)];
 
-        return view('admigen::table', compact('datas', 'trad', "fields", 'can', 'canAddName', 'model'));
+        if (view()->exists('backend.'.$model.'.liste')) {
+          return view('backend.'.$model.'.liste', compact('datas', 'trad', "fields", 'can', 'canAddName', 'model'));
+        } else {
+          return view('admigen::table', compact('datas', 'trad', "fields", 'can', 'canAddName', 'model'));
+        }
     }
 
 
@@ -114,12 +119,41 @@ class AdminController extends Controller
      {
         $modelI = '\App\\'.ucfirst($model) ;
 
-        $client = $modelI::firstOrNew(['id' => $request->id]);
+        $client = $modelI::firstOrCreate(['id' => $request->id]);
 
-        $client->fill($request->all());
+        if ($client->wasRecentlyCreated == true) {
+          $client->save();
+          $client = $modelI::where('id', $client->id)->firstOrFail();
+        }
+
+        foreach ($client->getAttributes() as $key => $value) {
+          if (array_key_exists($key, $client->getOriginal())) {
+            $client->$key = ($request->$key) ? $request->$key : $value;
+          } else {
+            unset($client->$key);
+          }
+        }
+
+
         $client->save();
 
-        return back();
+        if ($request->textes) {
+          foreach ($request->textes as $key => $value) {
+            if ($value) {
+              $client->saveTextes(1, $key, $value);
+            }
+          }
+        }
+        if ($request->images) {
+            $client->saveImgs(1, $request->images);
+        }
+        if ($request->images_sup) {
+            $client->saveImgs(1, $request->images_sup);
+        }
+
+        return redirect(route('admin.edit', ['model' => strtolower(class_basename($client)),'id' => $client->id ]));
+
+        // return back();
         return redirect(route('admin.show', $model));
      }
 
@@ -131,10 +165,36 @@ class AdminController extends Controller
      {
         $modelI = '\App\\'.ucfirst($model) ;
 
-        $client = $modelI::firstOrNew(['id' => $request->id]);
+        $client = $modelI::firstOrCreate(['id' => $request->id]);
 
-        $client->fill($request->all());
+        if ($client->wasRecentlyCreated == true) {
+          $client->save();
+          $client = $modelI::where('id', $client->id)->firstOrFail();
+        }
+        foreach ($client->getAttributes() as $key => $value) {
+          if (array_key_exists($key, $client->getOriginal())) {
+            $client->$key = (isset($request->$key)) ? $request->$key : $value;
+          } else {
+            unset($client->$key);
+          }
+        }
+
         $client->save();
+
+        if ($request->textes) {
+
+          foreach ($request->textes as $key => $value) {
+              $client->saveTextes(1, $key, $value);
+          }
+        }
+        if ($request->images) {
+            $client->saveImgs(1, $request->images);
+        }
+        if ($request->images_sup) {
+            $client->saveImgs(1, $request->images_sup);
+        }
+
+        return redirect(route('admin.edit', ['model' => strtolower(class_basename($client)),'id' => $client->id ]));
 
         return back();
         return redirect(route('admin.show', $model));
@@ -173,12 +233,14 @@ class AdminController extends Controller
             Image::make($photo)
                 ->resize(250, null, function ($constraints) {
                     $constraints->aspectRatio();
+                    $constraints->upsize();
                 })
                 ->save($path . '/' . $resize_name);
 
             Image::make($photo)
                 ->resize(1600, null, function ($constraints) {
                     $constraints->aspectRatio();
+                    $constraints->upsize();
                 })
                 ->save($path . '/' . $save_name);
 
@@ -194,13 +256,15 @@ class AdminController extends Controller
         ], 200);
     }
 
-    public function deleteImg($model, $field, $id)
-    {
-        $model = "App\\". ucfirst($model);
-        $instance = $model::whereId($id)->firstOrFail();
-        $instance->$field = NULL;
-        $instance->save();
 
+    public function deleteImg($model, $field, $id, $img_id = null)
+    {
+
+        if ($img_id) {
+          Photo::where('id', $img_id)->delete();
+        } else {
+          Photo::where('umodel', $model)->where('utype', $field)->where('uid', $id)->delete();
+        }
         return back();
     }
 
@@ -212,9 +276,27 @@ class AdminController extends Controller
 
       foreach ($photos as $key => $photo) {
         $image = $model::whereId($photo['id'])->first();
+        foreach ($image->getAttributes() as $key => $value) {
+          if (array_key_exists($key, $image->getOriginal())) {
+            $image->$key = ($request->$key) ? $request->$key : $value;
+          } else {
+            unset($image->$key);
+          }
+        }
         $image->position = $photo['ordre'];
         $image->save();
       }
+
+      return response()->json(['success' => true]);
+    }
+
+    public function updateImgType(Request $request) {
+
+
+        $image = Photo::whereId($request->id)->first();
+        $image->utype = $request->utype;
+        $image->save();
+
 
       return response()->json(['success' => true]);
     }
@@ -228,7 +310,5 @@ class AdminController extends Controller
 
         return response()->json(['success' => true, 'moderate' => $chat->{$request->field}]);
       }
-
-
 
 }

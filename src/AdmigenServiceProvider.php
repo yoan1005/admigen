@@ -14,6 +14,7 @@ class AdmigenServiceProvider extends ServiceProvider
   {
 
     $this->loadViewsFrom(__DIR__.'/resources/views', 'admigen');
+    $this->loadMigrationsFrom(__DIR__.'/database/migrations');
 
     $this->app['router']->aliasMiddleware('Admin', Middleware\Admin::class);
 
@@ -66,5 +67,10 @@ class AdmigenServiceProvider extends ServiceProvider
     $this->publishes([
       __DIR__ . '/public/assets/' => public_path('vendor/admigen'),
     ], 'public');
+
+
+    $this->publishes([
+      __DIR__.'/database/migrations' => base_path('database/migrations'),
+    ], 'admigen.migrations');
   }
 }

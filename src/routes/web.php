@@ -26,10 +26,11 @@ Route::get('login', function () {
     Route::post('{model}/edit/{id}', 'AdminController@update');
     Route::get('{model}/delete/{id}', 'AdminController@delete')->name('admin.delete');
 
-    Route::get('delete-img/{model}/{field}/{id}', 'AdminController@deleteImg')->name('deleteImg');
+    Route::get('delete-img/{model}/{field}/{id}/{img_id?}', 'AdminController@deleteImg')->name('deleteImg');
     Route::post('image/save', 'AdminController@saveImg');
     Route::post('file/save', 'AdminController@saveFile');
     Route::post('ordre/save', 'AdminController@reordonner')->name('admin.ordre');
+    Route::post('image/utype', 'AdminController@updateImgType')->name('admin.updateImgType');
     Route::post('state/save', 'AdminController@changeState')->name('admin.state');
 
 
