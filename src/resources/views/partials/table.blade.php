@@ -64,6 +64,7 @@
        @endif
    </td>
    @elseif (str_contains($k, '_id'))
+     <td>
       @php
         $models = explode('_id', $k);
         $model = "\App\\" . ucfirst($models[0]);
@@ -74,11 +75,12 @@
             @if ($model->id == $data[$k])
               @foreach ($arr_key_join as $keyyy)
                 @if (isset($model->$keyyy))
-                  <td>{{$model->$keyyy}}</td>
+                  {{$model->$keyyy}}
                 @endif
               @endforeach
             @endif
           @endforeach
+        </td>
       @endif
 
       @else
