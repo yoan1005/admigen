@@ -9,6 +9,7 @@ use Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Response;
+use Carbon\Carbon;
 use App\Http\Controllers\Controller;
 use Yoan1005\Admigen\AdPhoto as Photo;
 
@@ -68,6 +69,7 @@ class AdminController extends Controller
           'edit' => !in_array(ucfirst($model), config('admigen.cant.edit')),
           'order' => !in_array(ucfirst($model), config('admigen.cant.order')),
           'delete' => !in_array(ucfirst($model), config('admigen.cant.delete')),
+          'export' => !in_array(ucfirst($model), config('admigen.cant.export')),
           ];
 
         $canAddName = config('admigen.models')[ucfirst($model)];
@@ -309,6 +311,55 @@ class AdminController extends Controller
         $chat->save();
 
         return response()->json(['success' => true, 'moderate' => $chat->{$request->field}]);
+    }
+
+    public function exportCSV(Request $request) {
+      $model_r = ucfirst($request->model);
+      $model = 'App\\'.$model_r ;
+      $start = Carbon::now()->subYears(10);
+      $end = Carbon::now();
+      $lines = new $model;
+
+      if ($request->start_at && $request->end_at) {
+        $start = Carbon::parse($request->start_at);
+        $end = Carbon::parse($request->end_at);
+        $lines = $lines->whereBetween('created_at', [$start, $end]);
       }
+      if ($conditions = config('admigen.export.'.ucfirst($model_r).'.conditions')) {
+        foreach ($conditions as $condition) {
+          $lines = $lines->where($condition['field'], $condition['operator'], $condition['value']);
+        }
+      }
+      $lines = $lines->get();
+
+      $columns = config('admigen.export.'.ucfirst($model_r).'.columns');
+
+      $fileName = $model_r .'_' . $start->format('Y_m_d') .'--' . $end->format('Y_m_d') . '.csv';
+
+      $headers = array(
+        "Content-type"        => "text/csv",
+        "Content-Disposition" => "attachment; filename=$fileName",
+        "Pragma"              => "no-cache",
+        "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+        "Expires"             => "0"
+      );
+
+      $callback = function() use ($lines, $columns) {
+        $file = fopen('php://output', 'w');
+        fputcsv($file, $columns);
+
+        foreach ($lines as $line) {
+          foreach ($columns as $key => $value) {
+            $row[$value] = $line[$key];
+          }
+          fputcsv($file, $row);
+        }
+
+        fclose($file);
+      };
+
+      return response()->stream($callback, 200, $headers);
+
+    }
 
 }

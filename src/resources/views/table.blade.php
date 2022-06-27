@@ -12,8 +12,29 @@
                                     <a style="float:right" href="{{ route('admin.add' , ['model' => $model]) }}"><i class="pe-7s-plus"></i> Nouveau</a>
                              <?php endif ?>
                                 <h4 class="title">Liste des {{ (isset($titleShow)) ? $titleShow : $canAddName }}</h4>
-
                             </div>
+                            <div class="header">
+                            <hr>
+                            <?php if (isset($can) && $can['export']): ?>
+                                  <form class="" action="{{ route('admin.export' , ['model' => $model]) }}" method="post">
+                                    {{ csrf_field() }}
+                                    <div class="row">
+                                      <div class="col-md-4">
+                                        <label>Début</label>
+                                        <input type="date" class="form-control" placeholder="" name="start_at">
+                                      </div>
+                                      <div class="col-md-4">
+                                        <label>Fin</label>
+                                        <input type="date" class="form-control" placeholder="" name="end_at">
+                                      </div>
+                                      <div class="col-md-4">
+                                        <button type="submit" class="btn btn-info btn-fill pull-right">Exporter</button>
+                                      </div>
+                                    </div>
+                                  </form>
+                           <?php endif ?>
+                           <hr>
+                          </div>
                             <div class="content table-responsive table-full-width">
                                 @include('admigen::partials.table')
                                 @if ($datas instanceof \Illuminate\Pagination\LengthAwarePaginator)

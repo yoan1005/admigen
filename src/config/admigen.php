@@ -30,7 +30,7 @@
             'delete' => [],
             'order' => [],
             'paginate' => [],
-
+            'export' => []
         ],
         /*
         * Label des champs à afficher dans le tableau ci-dessus
@@ -69,8 +69,18 @@
 
         ],
 
-
-
+        'export' => [
+          'Model' => [
+            'columns' => [
+              "id" => "#",
+              "name" => "Nom",
+              "created_at" => "Crée le "
+            ],
+            'conditions' => [
+              ['field' => 'field', 'operator' => '==', 'value' => 'test']
+            ]
+          ]
+        ]
 
 
     ];

@@ -25,6 +25,7 @@ Route::get('login', function () {
     Route::get('{model}/edit/{id}', 'AdminController@edit')->name('admin.edit');
     Route::post('{model}/edit/{id}', 'AdminController@update');
     Route::get('{model}/delete/{id}', 'AdminController@delete')->name('admin.delete');
+    Route::post('{model}/export', 'AdminController@exportCSV')->name('admin.export');
 
     Route::get('delete-img/{model}/{field}/{id}/{img_id?}', 'AdminController@deleteImg')->name('deleteImg');
     Route::post('image/save', 'AdminController@saveImg');
