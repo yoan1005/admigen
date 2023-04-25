@@ -63,7 +63,7 @@
        <i onclick="changeState({{$data['id']}}, '{{strtolower(class_basename($datas->first()))}}', this, '{{$k}}')" class="pe-7s-close-circle" style="font-size: 1.5em;color: red"></i>
        @endif
    </td>
-   @elseif (str_contains($k, '_id'))
+   @elseif (Str::contains($k, '_id'))
      <td>
       @php
         $models = explode('_id', $k);
@@ -84,7 +84,7 @@
       @endif
 
       @else
-        <td>{{ str_limit($value, 50) }}</td>
+        <td>{{ Str::limit($value, 50) }}</td>
       @endif
       @else
         <td>&nbsp;</td>

@@ -24,7 +24,7 @@
 											@if (str_contains($key, '_id'))
 												@php
 													$models = explode('_id', $key);
-													$model = "\App\\" . ucfirst($models[0]);
+													$model = "\App\\Models\\" . ucfirst($models[0]);
 
 													$arr_key_join = ['title', 'name', 'nom', 'label'];
 												@endphp

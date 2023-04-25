@@ -18,7 +18,7 @@ class AdminController extends Controller
 
     protected function loginAdmin(Request $request)
     {
-        $user = \App\User::where('email', $request->email)->first();
+        $user = \App\Models\User::where('email', $request->email)->first();
         if ($user) {
             if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
                 Auth::login($user);
@@ -41,7 +41,7 @@ class AdminController extends Controller
     // MODELS : SHOW
     public function show($model)
     {
-        $modelI = '\App\\'.ucfirst($model) ;
+        $modelI = '\App\\Models\\'.ucfirst($model) ;
         $datas = $modelI::whereNotNull('id');
         if ($conditions = config('admigen.conditions.'.ucfirst($model).'')) {
           foreach ($conditions as $condition) {
@@ -87,7 +87,7 @@ class AdminController extends Controller
     // GENERIQUE
     public function new($model)
     {
-        $modelI = '\App\\'.ucfirst($model) ;
+        $modelI = '\App\\Models\\'.ucfirst($model) ;
 
       $instance = new $modelI;
       if (view()->exists('backend.'.$model.'.edit')) {
@@ -103,7 +103,7 @@ class AdminController extends Controller
     // GENERIQUE
     public function edit($model, $id)
     {
-        $modelI = '\App\\'.ucfirst($model) ;
+        $modelI = '\App\\Models\\'.ucfirst($model) ;
 
         $instance = $modelI::find($id);
         if (view()->exists('backend.'.$model.'.edit')) {
@@ -119,7 +119,7 @@ class AdminController extends Controller
     // GÉNÉRIQUE
      public function store(Request $request, $model)
      {
-        $modelI = '\App\\'.ucfirst($model) ;
+        $modelI = '\App\\Models\\'.ucfirst($model) ;
 
         $client = $modelI::firstOrCreate(['id' => $request->id]);
 
@@ -165,7 +165,7 @@ class AdminController extends Controller
     // GÉNÉRIQUE
      public function update(Request $request, $model)
      {
-        $modelI = '\App\\'.ucfirst($model) ;
+        $modelI = '\App\\Models\\'.ucfirst($model) ;
 
         $client = $modelI::firstOrCreate(['id' => $request->id]);
 
@@ -206,7 +206,7 @@ class AdminController extends Controller
     // MODELS : DELETE
     public function delete($model, $id)
     {
-        $modelI = '\App\\'.ucfirst($model) ;
+        $modelI = '\App\\Models\\'.ucfirst($model) ;
 
         $modelI::destroy($id);
         return back();
@@ -216,7 +216,7 @@ class AdminController extends Controller
 
     public function saveImg(Request $request)
     {
-        $model = "App\\". ucfirst($request->model);
+        $model = "App\\Models\\". ucfirst($request->model);
 
         $field = $request->field;
 
@@ -228,26 +228,31 @@ class AdminController extends Controller
                 mkdir($path, 0777);
             }
             $photo = $request->file('file');
-            $name = sha1(date('YmdHis') . str_random(30));
+            $name = sha1(date('YmdHis') . \Str::random(30));
             $save_name = $name . '.' . $photo->getClientOriginalExtension();
             $resize_name = 'thumb_' . $name . '.' . $photo->getClientOriginalExtension();
 
-            Image::make($photo)
-                ->resize(250, null, function ($constraints) {
-                    $constraints->aspectRatio();
-                    $constraints->upsize();
-                })
-                ->save($path . '/' . $resize_name);
+            $imageExtensions = ['jpg', 'jpeg', 'gif', 'png', 'bmp', 'svg', 'svgz', 'cgm', 'djv', 'djvu', 'ico', 'ief','jpe', 'pbm', 'pgm', 'pnm', 'ppm', 'ras', 'rgb', 'tif', 'tiff', 'wbmp', 'xbm', 'xpm', 'xwd'];
+            $extension = $photo->getClientOriginalExtension();
+            
+            if(in_array($extension, $imageExtensions))
+            {
+              Image::make($photo)
+                  ->resize(250, null, function ($constraints) {
+                      $constraints->aspectRatio();
+                      $constraints->upsize();
+                  })
+                  ->save($path . '/' . $resize_name);
 
-            Image::make($photo)
-                ->resize(1600, null, function ($constraints) {
-                    $constraints->aspectRatio();
-                    $constraints->upsize();
-                })
-                ->save($path . '/' . $save_name);
-
-            // $photo->move($path, $save_name);
-
+              Image::make($photo)
+                  ->resize(1600, null, function ($constraints) {
+                      $constraints->aspectRatio();
+                      $constraints->upsize();
+                  })
+                  ->save($path . '/' . $save_name);
+            } else {
+              $photo->move($path, $save_name);
+            }
 
             $fichier->$field = '/'.$public_path.$save_name;
             $fichier->save();
@@ -274,7 +279,7 @@ class AdminController extends Controller
 
       $photos = $request->input('photos');
       $model_r = ucfirst($request->model);
-      $model = 'App\\'.$model_r ;
+      $model = 'App\\Models\\'.$model_r ;
 
       foreach ($photos as $key => $photo) {
         $image = $model::whereId($photo['id'])->first();
@@ -305,7 +310,7 @@ class AdminController extends Controller
 
     public function changeState(Request $request) {
         $model_r = ucfirst($request->model);
-        $model = 'App\\'.$model_r ;
+        $model = 'App\\Models\\'.$model_r ;
         $chat = $model::whereId($request->id)->first();
         $chat->{$request->field} = !$chat->{$request->field};
         $chat->save();
@@ -315,7 +320,7 @@ class AdminController extends Controller
 
     public function exportCSV(Request $request) {
       $model_r = ucfirst($request->model);
-      $model = 'App\\'.$model_r ;
+      $model = 'App\\Models\\'.$model_r ;
       $start = Carbon::now()->subYears(10);
       $end = Carbon::now();
       $lines = new $model;
